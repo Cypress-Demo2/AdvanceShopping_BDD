@@ -22,19 +22,28 @@ class TestActions {
     password = '//*[@name="password"]'
     signInbutton = '//*[@id="sign_in_btn"]'
     speakertab = '//*[@id="speakersImg"]'
-    allproducts = '//html/body/div[3]/section/article/div[3]/div/div/div[2]/ul'
     items = '//*[@class = "titleItemsCount ng-binding"]'
     pricetab = '//*[@id = "accordionPrice"]'
     upperprice_handler = '//*[@class="noUi-origin noUi-background"]/div'
     minprice = '//*[@class="sliderSteps left ng-binding"]'
     maxprice = '//*[@class="sliderSteps  ng-binding"]'
     productprice = '//*[@class = "productPrice ng-binding"]'
-
+    Allproductimages = '//*[@class="imgProduct"]'
 
     setup() {
         cy.visit('https://advantageonlineshopping.com')
         cy.wait(10000)
     }
+    priviousPage () {
+        cy.go('back')       
+    }
+    productvisibility() {                                                                         
+
+        cy.get(this.Allproductimages).should('be.visible').then(($items) => {
+            const count = $items.length;
+            expect(count).to.be.greaterThan(0);
+        })
+      }
  fillemail(Email) {
     cy.xpath(this.email).type(Email);
  }
@@ -94,7 +103,8 @@ class TestActions {
     return parseFloat(text.replace(/[^\d.]/g, '').trim());
   }
   clickspeakertab() {
-    cy.xpath(this.speakertab).click();
+    cy.xpath(this.speakertab).click({timeout: 10000});
+    cy.wait(10000);
   }
 
   itemsvisibility() {
@@ -113,6 +123,7 @@ class TestActions {
     cy.get('img.imgProduct')
       .then(($items) => {
         const count = $items.length;
+        cy.get('.titleItemsCount.ng-binding').should('be.visible');
         cy.get('.titleItemsCount.ng-binding').then(function (element) {
           const itemcountvalue = element.text();
           const itemscount = parseInt(itemcountvalue);
@@ -124,12 +135,12 @@ class TestActions {
     cy.xpath(this.items).should('be.visible');
   }
   maxprice() {
-   let max = cy.xpath(this.maxprice)
+   let max = cy.xpath(this.maxprice).should('be.visible');
    let maxelement = max.invoke('text')
    return this.cleanprice(maxelement)
   }
   minprice() {
-    let min = cy.xpath(this.minprice)
+    let min = cy.xpath(this.minprice).should('be.visible')
     let minelement = min.invoke('text')
     return this.cleanprice(minelement)
   }
@@ -144,13 +155,14 @@ class TestActions {
     let max = cy.xpath(this.maxprice)
     let min = cy.xpath(this.minprice)
     this.clickpricetab()
-    this.scrollbutton()
+    this.scrollbutton({})
     let maxelement = max.invoke('text')
         let minelement = min.invoke('text')
         minelement.then((minelement) => {
             const cleanminprice = this.cleanprice(minelement)
             maxelement.then((maxelement) => {
                 const cleanmaxprice = this.cleanprice(maxelement)
+               cy.get('.productPrice.ng-binding').should('be.visible')
                 let mainvalue = cy.get('.productPrice.ng-binding').each(($element) => {
                     cy.wrap($element).scrollIntoView()
                     cy.wrap($element).invoke('text').then((prices) => {

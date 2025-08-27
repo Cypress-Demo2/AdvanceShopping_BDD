@@ -9,4 +9,27 @@ Feature: Speaker page functionality
     Given I should be present on homepage
     When I click on speaker button
     Then I validate the price filter functionality 
+
+@focus
+  Scenario: Verify compatibility filter functionality
+    Given I should be present on homepage
+    When I click on speaker button
+    Then I validate the compatibility filter functionality for "<filter>"
+
+    Examples:
+      | filter              |
+      | bluetooth enabled   |
+      | mm audio connector  |
+
+ Scenario: Verify manufacturer filter functionality
+  Given I should be present on homepage
+  When I click on speaker button
+  Then I validate the manufacturer filter functionality for "<Manufacturer>"
+
+  Examples:
+    | Manufacturer |
+    | Bose         |
+    | HP           |
+    | LG           |
+
     

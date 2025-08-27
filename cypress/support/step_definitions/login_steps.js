@@ -1,5 +1,5 @@
 import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
-import TestActions from "../../support/commonUtil";
+import TestActions from "../commonUtil";
 const testActions = new TestActions();
 
 Given("I should be on homepage", () => {
