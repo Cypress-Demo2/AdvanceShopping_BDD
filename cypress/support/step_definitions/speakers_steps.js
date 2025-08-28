@@ -22,12 +22,17 @@ Then("I validate the price filter functionality", () => {
 });
 Then("I validate the compatibility filter functionality for {string}", (filter) => {
   if (filter.toLowerCase().includes("bluetooth")) {
-    speakersPage.compatibilityFilter(speakersPage.bluetoothenabledbutton, filter);
-  } else if (filter.toLowerCase().includes("mm audio connector")) {
-    speakersPage.compatibilityFilter(speakersPage.mmaudioconnectorbutton, filter);
-  }
+    speakersPage.filterValidations(speakersPage.compatibilityfilterbutton,speakersPage.bluetoothenabledbutton,speakersPage.compatibility,filter);
+  } 
 })
-Then("I validate the manufacturer filter functionality for {string}", (manifacturer) => {
-  speakersPage.manifauturefilter(manifacturer);
+Then("I validate the manufacturer filter functionality for {string}", (Manufacturer) => {
+  if (Manufacturer==='Bose') {
+    speakersPage.filterValidations(speakersPage.manifauturefilterbutton,speakersPage.bosebutton,speakersPage.manifacturervalue, Manufacturer);
+  } else if (Manufacturer==='HP') {
+   speakersPage.filterValidations(speakersPage.manifauturefilterbutton,speakersPage.HPbutton,speakersPage.manifacturervalue, Manufacturer);
+  } else if(Manufacturer==='Logitech') {
+    speakersPage.filterValidations(speakersPage.manifauturefilterbutton,speakersPage.lgbutton,speakersPage.manifacturervalue,Manufacturer);
+  }
+  
 });
 

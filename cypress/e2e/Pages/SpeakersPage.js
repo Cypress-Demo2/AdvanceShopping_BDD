@@ -13,13 +13,14 @@ class speaker {
     mmaudioconnectorbutton = '//*[@name ="compatibility_1"]'
     manifauturefilterbutton = '//*[@id="accordionAttrib1"]'
     bosebutton = '//*[@name="manufacturer_0"]'
-    lgbutton = '//*[@name="manufacturer_1"]'
-    HPbutton = '//*[@name="manufacturer_2"]'
+    lgbutton = '//*[@name="manufacturer_2"]'
+    HPbutton = '//*[@name="manufacturer_1"]'
     Allmanifauturebutton = '//*[@id="mobileSlide"]/ul/li[3]/div'
     Allprices = '//*[@class="productPrice ng-binding"]'
     Allproductimages = '.imgProduct'
     compatibility = '.value.ng-binding'
-    manifacturervalue = ':nth-child(4) > .value'
+    manifacturervalue = 'div.roboto-light.list.ng-scope:nth-child(4) .value.ng-binding'
+   
 
     speakerCountValidation() {
         cy.get(this.Allproductimages).should('be.visible')
@@ -57,13 +58,22 @@ class speaker {
     previousPage() {
         cy.go('back')
     }
-    productvisibility() {
+    productVisibility() {
         cy.get(this.Allproductimages).should('be.visible').then(($items) => {
             const count = $items.length;
             expect(count).to.be.greaterThan(0);
         })
     }
-    compatibilityfiltervaluevalidation(value) {
+    filterValueValidation(element,value) {
+        cy.get(element, { timeout: 20000 })
+            .should('be.visible')
+            .first()
+            .invoke('text')
+            .then((text) => {
+                expect(text.toLowerCase()).to.include(value.toLowerCase())
+            })
+    }
+    /*compatibilityfiltervaluevalidation(value) {
         cy.get(this.compatibility, { timeout: 20000 })
             .should('be.visible')
             .first()
@@ -72,69 +82,46 @@ class speaker {
                 expect(text.toLowerCase()).to.include(value.toLowerCase())
             })
     }
-    clickfilterelement(element) {
+    manifaturefiltervaluevalidation(value) {
+        cy.get(this.manifacturervalue, { timeout: 20000 })
+            .should('be.visible')
+            .first()
+            .invoke('text')
+            .then((text) => {
+                expect(text.toLowerCase()).to.include(value.toLowerCase())
+            })
+    }*/
+    clickFilterElement(element) {
         cy.xpath(element, { timeout: 20000 }).click({ force: true })
+        cy.wait(1000)
     }
-   compatibilityFilter(element, value) {
-  cy.xpath(this.compatibilityfilterbutton, { timeout: 20000 }).click({ force: true })
-  this.clickfilterelement(element)
-
-  cy.get(this.Allproductimages, { timeout: 30000 }).should('be.visible').each(($el, index) => {
-    // alias current product to avoid detached DOM issue
-    cy.get(this.Allproductimages).eq(index).as('currentProduct')
-
-    cy.get('@currentProduct')
-      .scrollIntoView()
-      .should('be.visible')
-      .click({ force: true }, { timeout: 20000 })
-
-    // validate product details
-    this.compatibilityfiltervaluevalidation(value)
-
-    // go back (or close modal)
-    this.previousPage()
-
-    // wait for product grid to re-render
-    cy.get(this.Allproductimages, { timeout: 30000 }).should('be.visible')
-  })
+    clickFilter(element){
+       cy.xpath(element, { timeout: 20000 }).click({ force: true })
     }
-    compatibilityFilterBluetoothEnabled(value) {
-        this.compatibilityFilter(this.bluetoothenabledbutton,value);
-    }
-    compatibilityfilter_mmAudioConnector(value) {
-        this.compatibilityFilter(this.mmaudioconnectorbutton,value);
-    }
-    manifauturefilter(value) {
-        cy.xpath(this.manifauturefilterbutton).click({ force: true }, { timeout: 20000 })
-        //cy.xpath(this.Allmanifauturebutton).should('be.visible').then((element) => {
-        //const allmainfaturerecount = element.length
-        //for (let i = 0; i < allmainfaturerecount; i++) {
-        //cy.xpath(this.Allmanifauturebutton).eq(i).scrollIntoView().click({ force: true })
-        // cy.wait(1000)
-        cy.get(this.Allproductimages).should('be.visible').then(($products) => {
-            const productCount = $products.length
-            for (let i = 0; i < productCount; i++) {
-                cy.get(this.Allproductimages).eq(i).scrollIntoView().click({ force: true }, { timeout: 20000 })
-                cy.get(this.manifacturervalue)
-                    .should('be.visible')
-                    .invoke('text')
-                    .then((text) => {
-                        expect(text.toLowerCase()).to.include(value.toLowerCase())
-                    })
-
-                this.previousPage()
-                this.productvisibility()
-            }
+    productIteration(){
+        cy.get(this.Allproductimages, { timeout: 30000 }).should('be.visible').each(($el, index) => {
+            cy.get(this.Allproductimages).eq(index).as('currentProduct')
+            cy.get('@currentProduct')
+                .scrollIntoView()
+                .should('be.visible')
+                 .click({ force: true }, { timeout: 20000 })
+    })
+}
+    filterValidations(element, filterelement,valueElement,value) {
+        this.clickFilter(element)
+        this.clickFilterElement(filterelement)
+        cy.get(this.Allproductimages, { timeout: 30000 }).should('be.visible').each(($el, index) => {
+            cy.get(this.Allproductimages).eq(index).as('currentProduct')
+            cy.get('@currentProduct')
+                .scrollIntoView()
+                .should('be.visible')
+                 .click({ force: true }, { timeout: 20000 })
+             this.filterValueValidation(valueElement,value)
+            this.previousPage()
+            cy.get(this.Allproductimages, { timeout: 30000 }).should('be.visible')
+            this.clickFilter(element)
+            this.clickFilterElement(filterelement)
         })
-    }
-    maifactureFilter_Bose() {
-        this.manifauturefilter('Bose');
-    }
-    maifactureFilter_LG() {
-        this.manifauturefilter('LG');
-    }
-    maifactureFilter_HP() {
-        this.manifauturefilter('HP');
     }
 
 } export default speaker;

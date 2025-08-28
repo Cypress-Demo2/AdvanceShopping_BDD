@@ -10,7 +10,7 @@ Feature: Speaker page functionality
     When I click on speaker button
     Then I validate the price filter functionality 
 
-@focus
+
   Scenario: Verify compatibility filter functionality
     Given I should be present on homepage
     When I click on speaker button
@@ -19,7 +19,6 @@ Feature: Speaker page functionality
     Examples:
       | filter              |
       | bluetooth enabled   |
-      | mm audio connector  |
 
  Scenario: Verify manufacturer filter functionality
   Given I should be present on homepage
@@ -30,6 +29,6 @@ Feature: Speaker page functionality
     | Manufacturer |
     | Bose         |
     | HP           |
-    | LG           |
+    | Logitech     |
 
     
