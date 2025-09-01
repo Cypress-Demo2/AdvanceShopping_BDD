@@ -10,7 +10,7 @@ Feature: Speaker page functionality
     When I click on speaker button
     Then I validate the price filter functionality 
 
-
+ 
   Scenario: Verify compatibility filter functionality
     Given I should be present on homepage
     When I click on speaker button
@@ -21,9 +21,9 @@ Feature: Speaker page functionality
       | bluetooth enabled   |
 
  Scenario: Verify manufacturer filter functionality
-  Given I should be present on homepage
-  When I click on speaker button
-  Then I validate the manufacturer filter functionality for "<Manufacturer>"
+    Given I should be present on homepage
+    When I click on speaker button
+    Then I validate the manufacturer filter functionality for "<Manufacturer>"
 
   Examples:
     | Manufacturer |
